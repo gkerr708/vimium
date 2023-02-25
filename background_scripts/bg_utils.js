@@ -77,15 +77,18 @@ var BgUtils = {
 
   // Log messages to the extension's logging page, but only if that page is open.
   log: (function () {
+    console.log("log is being called");
     const loggingPageUrl = chrome.runtime.getURL("pages/logging.html");
     // Do not output URL for tests.
     if (loggingPageUrl != null) {
       console.log(`Vimium logging URL:\n  ${loggingPageUrl}`);
     }
     // For development, it's sometimes useful to automatically launch the logging page on reload.
-    if (localStorage.autoLaunchLoggingPage) {
-      chrome.windows.create({ url: loggingPageUrl, focused: false });
-    }
+    // TODO(philc): can we remove this logging function? Background pages no longer have access to
+    // localStorage, and I haven't used this in years.
+    // if (localStorage.autoLaunchLoggingPage) {
+    //   chrome.windows.create({ url: loggingPageUrl, focused: false });
+    // }
     return function (message, sender = null) {
       for (let viewWindow of chrome.extension.getViews({ type: "tab" })) {
         if (viewWindow.location.pathname === "/pages/logging.html") {
@@ -177,5 +180,5 @@ const SearchEngines = {
 
 BgUtils.TIME_DELTA = TIME_DELTA; // Referenced by our tests.
 
-window.SearchEngines = SearchEngines;
-window.BgUtils = BgUtils;
+globalThis.SearchEngines = SearchEngines;
+globalThis.BgUtils = BgUtils;
