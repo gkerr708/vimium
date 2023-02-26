@@ -14,11 +14,17 @@ chrome.runtime.onInstalled.addListener(function ({ reason }) {
   const manifest = chrome.runtime.getManifest();
   // Content scripts loaded on every page should be in the same group. We assume it is the first.
   const contentScripts = manifest.content_scripts[0];
-  const jobs = [[chrome.tabs.executeScript, contentScripts.js], [
-    // TODO(philc): manifest v3
-    // chrome.tabs.insertCSS,
-    contentScripts.css,
-  ]];
+  const jobs = [
+    [
+      chrome.tabs.executeScript,
+      contentScripts.js,
+    ],
+    [
+      // TODO(philc): manifest v3
+      // chrome.tabs.insertCSS,
+      contentScripts.css,
+    ],
+  ];
   // Chrome complains if we don't evaluate chrome.runtime.lastError on errors (and we get errors for tabs on
   // which Vimium cannot run).
   const checkLastRuntimeError = () => chrome.runtime.lastError;
